@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+          PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+          "http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper namespace="com.camel.project.mapper.ItemOrderMapper">
+	<select id="getAllItem" resultType="com.camel.project.dto.ItemOrder">
+		SELECT item_no as itemNo, item_name as itemName, item_desc as itemDesc, item_price as itemPrice, img_file as imgFile
+		FROM item
+	</select>
+
+	<select id="getItemByNo" resultType="com.camel.project.dto.ItemOrder" parameterType="int">
+		SELECT item_no as itemNo, item_name as itemName, item_desc as itemDesc, item_price as itemPrice, img_file as imgFile
+		FROM item
+		WHERE item_no = #{item_no}
+	</select>
+
+	<select id="getOrderByNo" resultType="com.camel.project.dto.ItemOrder" parameterType="com.camel.project.dto.ItemOrder">
+		SELECT item_no as itemNo, item_name as itemName, item_desc as itemDesc, item_price as itemPrice, img_file as imgFile
+		FROM item
+		WHERE item_no = #{itemNo}
+	</select>
+
+	<insert id="insertOrder" parameterType="com.camel.project.dto.ItemOrder">
+		INSERT INTO order_tb(order_no, order_quantity, rec_name, rec_phone, rec_addr, rec_detail_addr, rec_postcode, rec_request, payment_method, card_type, installment, bank_type, item_no, memberId)
+		VALUES(order_seq.nextval, #{orderQuantity}, #{recName}, #{recPhone}, #{recAddr}, #{recDetailAddr}, #{recPostcode}, #{recRequest}, #{paymentMethod}, #{cardType}, #{installment}, #{bankType}, #{itemNo}, #{memberId})
+	</insert>
+
+	<select id="getAllOrder" resultType="com.camel.project.dto.ItemOrder" parameterType="com.camel.project.dto.ItemOrder">
+		SELECT o.order_no as orderNo, i.item_name as itemName, o.rec_name as recName, o.order_quantity as orderQuantity, i.item_price * o.order_quantity as totalPrice, o.memberId
+		FROM item i
+		JOIN order_tb o using (item_no)
+		WHERE o.memberId = #{memberId}
+	</select>
+
+	<delete id="deleteOrder" parameterType="int">
+		DELETE FROM order_tb
+		WHERE order_no = #{orderNo}
+	</delete>
+
+	<select id="getOrderMemberId" resultType="String" parameterType="int">
+		SELECT memberId
+		FROM order_tb
+		WHERE order_no = #{orderNo}
+	</select>
+</mapper>

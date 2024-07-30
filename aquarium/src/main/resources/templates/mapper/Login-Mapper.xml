@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.camel.project.mapper.LoginMapper">
+    
+    <select id="getLogin" resultType="com.camel.project.dto.Login" parameterType="java.util.Map">
+        SELECT * FROM MEMBER
+        WHERE MEMBERID = #{memberId}
+        AND MEMBERPW = #{memberPw}
+    </select>
+
+</mapper>

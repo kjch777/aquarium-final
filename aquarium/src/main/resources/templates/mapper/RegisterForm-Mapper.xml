@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.camel.project.mapper.MemberMapper">
+	<!-- 회원가입 -->
+    <insert id="insertMember" parameterType="com.camel.project.dto.Member">
+        INSERT INTO member (memberNo, memberId, memberPw, memberEmail, memberName, memberBirth, memberPhone)
+        VALUES(memberNo_seq.NEXTVAL, #{memberId}, #{memberPw}, #{memberEmail}, #{memberName}, #{memberBirth}, #{memberPhone})
+    </insert>
+    <!-- 아이디 중복 검사 -->
+    <select id="countById" resultType="int" parameterType="java.lang.String">
+        SELECT COUNT(*) FROM member WHERE memberId = #{memberId}
+    </select>
+    <!-- 임시 로그인 -->
+    <select id="getLogin" resultType="com.camel.project.dto.Member" parameterType="java.util.Map">
+		select * from member
+		where memberId = #{memberId}
+		and memberPw = #{memberPw}
+	</select>
+    <!-- 회원 정보 수정 -->
+    <update id="updateMember" parameterType="com.camel.project.dto.Member">
+		UPDATE member SET memberId = #{memberId}, memberPw = #{memberPw}, 
+		memberName = #{memberName}, memberEmail = #{memberEmail}, memberPhone = #{memberPhone}
+		WHERE memberNo = #{memberNo}
+	</update>
+	<!-- 회원 탈퇴 -->
+	<delete id="deleteMember" parameterType="int">
+		delete from member where memberNo = #{memberNo}
+	</delete>
+	<!-- 생년월일과 이름으로 회원 조회 -->
+	<select id="findByBirthAndName" resultType="com.camel.project.dto.Member">
+		SELECT * FROM member
+		WHERE memberBirth = #{memberBirth} AND memberName = #{memberName}
+	</select>
+	<!-- 아이디랑 이메일로 회원 조회-->
+	<select id="findByEmailAndId" resultType="com.camel.project.dto.Member">
+		SELECT * FROM member
+		WHERE memberId = #{memberId} AND memberEmail = #{memberEmail}
+	</select>
+</mapper>

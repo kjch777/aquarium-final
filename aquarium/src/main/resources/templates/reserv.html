@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>예약페이지</title>
+    <link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+			crossorigin="anonymous"></script>
+    <style>
+        .program-img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+        }
+        .reserveContainer {
+            display: flex;
+            justify-content: center;
+            /*align-items: center;*/
+            align-items: flex-start;
+            margin: 20px auto;
+            max-width: 1400px;
+        }
+        .contents {
+            display: flex;
+            flex: 2;
+            margin-right: 20px;
+            justify-content: center; 
+            padding: 20px;
+            
+        }
+        
+        .imgSection {
+        margin-right: 20px;
+        }
+        
+	    .description {
+	        margin-left: 20px; 
+	    }
+	    
+        .reserveSection {
+            flex: 1;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px #f2f2f2;
+            margin-left: 40px;
+        }
+        .countBtnSection {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .countBtnSection button {
+            width: 30px;
+            height: 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 0 5px;
+        }
+        .countBtnSection input {
+            width: 50px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+        }
+        .totalPrice {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        button[type="button"] {
+            width: 30px;
+            height: 30px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button[type="submit"] {
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .adultSection, .childSection{
+            border: 1px solid #f0f0f0;
+            border-radius: 10px;
+            padding: 10px 0px 10px 10px;
+            
+        }
+        
+        .hidden{
+        	display: none;
+        }
+
+        footer {
+            background-color: darkblue;
+            color: white;
+            margin-top: 30px;
+            padding: 10px 0;
+        }
+        /*내비게이션*/
+.navform {
+	box-shadow: 5px 5px 10px black;
+	background-color: rgb(250, 251, 253);
+}
+
+.login {
+	margin-left: auto;
+	color: darkblue;
+	font-size: small;
+	font-weight: bold;
+}
+
+.nav-link {
+	color: darkblue;
+	font-size: large;
+	font-weight: bold;
+}
+    </style>
+</head>
+<body>
+    
+    <header>
+		<nav class="navform navbar navbar-expand-lg bg-body-tertiary">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="/"> <img src="/image/pngegg.png"
+					alt="logoImage" style="width: 210px" />
+				</a>
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+						fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+							d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+            </svg>
+				</button>
+				<div class="collapse navbar-collapse justify-content-center"
+					id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item mr-5">
+						    <a class="nav-link" href="/information_aquarium">이용 안내</a>
+						</li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								아쿠아리움 소개 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/introducing_fish">전시생물 소개</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/introducing_program">프로그램 소개</a></li>
+							</ul></li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								온라인 예매 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/program">예약하기</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/reserveConfirm">예약확인</a></li>
+							</ul></li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								굿즈샵 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/itemMain">구매하기</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/orderInfo">구매정보</a></li>
+							</ul></li>
+					</ul>
+				</div>
+				<div th:if="${session.loginSession == null}" class="ml-auto" id="loginStatus" data-logged-in="false">
+					<a href="/login" class="login">로그인</a> 
+				</div>
+				<div th:if="${session.loginSession != null}"
+					class="ml-auto" id="loginStatus" data-logged-in="true">
+					<span th:text="${session.loginSession.memberName}+'님, 환영합니다.'"></span><br>
+					<a href="/MyInfo" class="login">개인정보 수정</a><br>
+					<a href="/logout" class="login">로그아웃</a>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+    <div class="reserveContainer mt-5">
+        <div class="contents">
+            <div class="imgSection">
+                <img id="programImage" src="default.jpg" alt="프로그램 이미지" class="program-img">
+            </div>
+            <div class="description">
+                <p id="programDescription">프로그램 설명이 여기에 작성됩니다.</p>
+            </div>
+        </div>
+        <div class="reserveSection">
+            <form method="post" action="/reserve">
+			    <h4 id="programTitle">프로그램 제목</h4>
+			    <input class="hidden" type="text" id="programNo" name="programNo"><!-- programNo 데이터 값을 보내야하는데 form안에 해당 input 태그가 없음  -->
+			    <input type="date" id="reservDate" name="reservDate" class="form-control">
+			    <div class="adultSection mt-3">
+			        <h5>성인</h5>
+			        <div class="countBtnSection">
+			            <button type="button" onclick="decreasAdultCount()">-</button>
+			            <input type="number" id="adultCount" name="adultCount" value="1" required>
+			            <button type="button" onclick="increasAdultCount()">+</button>
+			        </div>
+			        <br>
+			        <span id="adultPrice">0원</span>
+			    </div>
+			    <div class="childSection mt-3">
+			        <h5>어린이</h5>
+			        <div class="countBtnSection">
+			            <button type="button" onclick="decreasChildCount()">-</button>
+			            <input type="number" id="childCount" name="childCount" value="0" required>
+			            <button type="button" onclick="increasChildCount()">+</button>
+			        </div>
+			        <br>
+			        <span id="childPrice">0원</span>
+			    </div>
+			    <div class="totalPrice mt-3">
+			        <h5>총 금액: <span id="reservTotalPrice">0원</span></h5>
+			        <input class="hidden" type="number" id="reservTotalPriceInput" name="reservTotalPrice">
+			    </div>
+			    <button type="submit" onclick="return payment()">결제하기</button>
+			</form>
+        </div>
+    </div>
+
+    <script>
+        // 날짜 선택
+        $(document).ready(function() {
+            // 오늘 날짜 구하기
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 필요
+            const day = String(today.getDate()).padStart(2, '0');
+
+            // 오늘 날짜를 YYYY-MM-DD 형식으로 변환
+            const minDate = `${year}-${month}-${day}`;
+
+            // input 요소에 최대 날짜 설정
+            $('#reservDate').attr('min', minDate);
+        });
+
+        // 성인 수 증가 함수
+        function increasAdultCount() {
+            var adult = $("#adultCount");
+            var currentAdultCount = parseInt(adult.val());
+            if (currentAdultCount < 9) {
+                adult.val(currentAdultCount + 1);
+            }
+            updateAdultPrice();
+        }
+
+        // 성인 수 감소 함수
+        function decreasAdultCount() {
+            var adult = $("#adultCount");
+            var currentAdultCount = parseInt(adult.val());
+            if (currentAdultCount > 0) {
+                adult.val(currentAdultCount - 1);
+            }
+            updateAdultPrice();
+        }
+
+        // 어린이 수 증가 함수
+        function increasChildCount() {
+            var child = $("#childCount");
+            var currentChildCount = parseInt(child.val());
+            if (currentChildCount < 9) {
+                child.val(currentChildCount + 1);
+            }
+            updateChildPrice();
+        }
+
+        // 어린이 수 감소 함수
+        function decreasChildCount() {
+            var child = $("#childCount");
+            var currentChildCount = parseInt(child.val());
+            if (currentChildCount > 0) {
+                child.val(currentChildCount - 1);
+            }
+            updateChildPrice();
+        }
+
+        // 성인 총 가격 업데이트
+        function updateAdultPrice() {
+            var adultCount = parseInt($("#adultCount").val());
+            var adultPrice = adultCount * programAdultPrice;
+            var formattedPrice = adultPrice.toLocaleString(); // toLocaleString() 숫자를 통화형식(천단위씩)으로 변환
+            $("#adultPrice").text(formattedPrice + "원");
+            updateTotalPrice();
+        }
+
+        // 어린이 총 가격 업데이트
+        function updateChildPrice() {
+            var childCount = parseInt($("#childCount").val());
+            var childPrice = childCount * programChildPrice;
+            var formattedPrice = childPrice.toLocaleString();
+            $("#childPrice").text(formattedPrice + "원");
+            updateTotalPrice();
+        }
+
+        // 총 가격 업데이트
+        function updateTotalPrice() {
+            var adultCount = parseInt($("#adultCount").val());
+            var childCount = parseInt($("#childCount").val());
+            var totalPrice = (adultCount * programAdultPrice) + (childCount * programChildPrice);
+            var formattedPrice = totalPrice.toLocaleString();
+            $("#reservTotalPrice").text(formattedPrice + "원");
+            $("#reservTotalPriceInput").val(totalPrice);
+        }
+
+        // URL 파라미터를 읽어오는 함수
+        function getParameterByName(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // 예약 페이지가 로드될 때 프로그램 정보 업데이트
+        window.onload = function() {
+            const program = getParameterByName('program');
+            const programs = {
+            		aquarium: {
+                        img: '/img/aquarium.jpg',
+                        programNo: 'P1',
+                        title: '아쿠아리움 입장권',
+                        description: '500종 40,000마리의 다양한 바다 생물들을 만나볼 수 있습니다.\n\n' +
+    				            		'[입장시간]\n' +
+    				            		'평일 : 10:30 ~ 18:30\n' +
+    				            		'주말 : 10:00 ~ 17:00',
+                        adultPrice: 10000,
+                        childPrice: 5000,
+                    },
+                    scuba: {
+                        img: '/img/scuba.avif',
+                        programNo: 'P2',
+                        title: '아쿠아리움 입장권 + 스킨스쿠버 체험',
+                        description: '메인 수조 속에서 다양한 바다생물들이 눈앞에서 펼쳐지는 특별한 프로그램\n\n' +
+                        				'[세이프티]\n' +
+                        				' - 대상자 만 15세 이상' +
+                        				' - 소요시간 약 90분 (교육시간 + 잠수시간)' +
+                        				'[다이빙]\n' +
+                        				' - 대상자 만 18세 이상(스킨스쿠버 중급 수료자 이상)' +
+                        				' - 소요시간 약 90분 (교육시간 + 잠수시간)',
+                        adultPrice: 30000,
+                        childPrice: 15000
+                    },
+                    feeding: {
+                        img: '/img/feed.jpg',
+                        programNo: 'P3',
+                        title: '아쿠아리움 입장권 + 동물 먹이주기 체험',
+                        description: '다양한 동물에게 직접 먹이를 줄 수 있는 프로그램이 포함\n\n' +
+                        			'펭귄 : 11:00\n' +
+                        			'수달 : 12:00\n' +
+                        			'돌고래 : 14:00\n' +
+                        			'바다표범 : 17:00\n',
+                        adultPrice: 20000,
+                        childPrice: 10000
+                    }
+            };
+
+            if (programs[program]) {
+                $("#programImage").attr("src", programs[program].img);
+                //$("#programNo").text(programs[program].programNo); <!-- programNo의 input태그에 값을 넣어줘야함. input태그라 text로 넣어주는것이 아니라 val로 넣어줘야함  -->
+                $("#programNo").val(programs[program].programNo);
+                $("#programTitle").text(programs[program].title);
+                //$("#programDescription").text(programs[program].description);
+                $("#programDescription").html(nl2br(programs[program].description)); // .html()을 사용하여 <br> 태그가 적용되도록 설정
+                programAdultPrice = programs[program].adultPrice;
+                programChildPrice = programs[program].childPrice;
+                updateAdultPrice();
+                updateChildPrice();
+                
+            }
+        }
+        
+     	// 줄바꿈 문자를 <br> 태그로 변환하는 함수
+        function nl2br(str) {
+            return str.replace(/\n/g, '<br>');
+        }
+
+        // 결제 함수
+        function payment() {
+        	// 
+        	var loginStatusDiv = document.getElementById("loginStatus");
+    		var isLoggedIn = loginStatusDiv.getAttribute("data-logged-in") === "true";
+    		
+    		if (isLoggedIn) {
+	            const reservDate = $('#reservDate').val();
+	            if(reservDate == "") {
+	                alert("예약날짜를 선택해주세요");
+	                return false;
+	            }
+	            var adultCount = parseInt($("#adultCount").val());
+	            var childCount = parseInt($("#childCount").val());
+	            
+	            if (adultCount + childCount == 0) {
+	            	alert("인원수를 확인해 주세요");
+	            	return false;
+	            }
+	            var reservTotalPrice = ($("#reservTotalPrice").text());
+	            alert("예약날짜 " + reservDate + " 성인 " + adultCount + "명, 어린이 " + childCount + "명 총 금액 " + reservTotalPrice + " 결제되었습니다.");
+	            return true;
+    		} else {
+    			alert("로그인을 먼저 해주세요");
+    			window.location.href = "/login"; // 로그인 페이지로 리다이렉트
+    			return false;
+    		}
+        }
+    </script>
+    <footer class="footer">
+        <div class="container text-center">
+            <div class="icon">
+                <p>
+                    <a href="https://www.facebook.com/?locale=ko_KR"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                        <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
+                        </svg>
+                    </a> |
+                    <a href="https://www.instagram.com/sem/campaign/emailsignup/?campaign_id=13530338586&extra_1=s%7Cc%7C547419126431%7Ce%7Cig%7C&placement=&creative=547419126431&keyword=ig&partner_id=googlesem&extra_2=campaignid%3D13530338586%26adgroupid%3D126262418054%26matchtype%3De%26network%3Dg%26source%3Dnotmobile%26search_or_content%3Ds%26device%3Dc%26devicemodel%3D%26adposition%3D%26target%3D%26targetid%3Dkwd-116669079%26loc_physical_ms%3D9195692%26loc_interest_ms%3D%26feeditemid%3D%26param1%3D%26param2%3D&gad_source=1&gclid=CjwKCAjwps-zBhAiEiwALwsVYUBgTuB3XuK7LyzjibLzvY0s91HDUhOrJNM4Lv7Ngt3VPzOaoUzARBoCu8QQAvD_BwE">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                            <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
+                            </svg>
+                    </a> |
+                    <a href="https://www.youtube.com/?hl=ko&gl=KR&app=desktop">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-youtube" viewBox="0 0 16 16">
+                            <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/>
+                            </svg>
+                    </a> |
+                    <a href="https://x.com/?lang=ko">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
+                            <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+                            </svg>
+                    </a>
+                </p>
+            </div>
+            <p>&copy; The National Marine Aquarium. All Rights Reserved.</p>
+            <p>
+                <a href="#">개인정보처리방침</a> | <a href="#">이용약관</a>
+            </p>
+            <hr style="border-color:white;">
+            <p style="font-size: small;">서울특별시 강남구 대치동 509-2 강남구의회, 강남구민회관 | 509-2, Daechi-dong, Gangnam-gu, Seoul</p>
+            <p style="font-size: small;">사업자등록번호 211-86-49403 | 대표전화 010-7434-8494</p>
+        </div>
+    </footer>
+</body>
+</html>

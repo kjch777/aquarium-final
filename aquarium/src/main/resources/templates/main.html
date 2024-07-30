@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>The National Marine Aquarium</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+	crossorigin="anonymous"></script>
+<script src="/js/registerForm.js"></script>
+
+<style>
+body {
+	background-color: rgb(39, 53, 247);
+}
+/*내비게이션*/
+.navform {
+	box-shadow: 5px 5px 10px black;
+	background-color: rgb(250, 251, 253);
+}
+
+.login {
+	margin-left: auto;
+	color: darkblue;
+	font-size: small;
+	font-weight: bold;
+}
+
+.nav-link {
+	color: darkblue;
+	font-size: large;
+	font-weight: bold;
+}
+
+/*푸터*/
+footer {
+	background-color: darkblue;
+	color: white;
+	margin-top: 30px;
+	padding: 10px 0;
+}
+
+.content {
+	position: relative;
+	margin-top: 20px;
+	background-color: rgb(252, 252, 252);
+	width: 100%; /* 최대 너비 */
+	height: auto; /* 고정된 높이 값 */
+	border-radius: 5px;
+	box-shadow: 5px 5px 10px darkblue;
+	padding: 20px;
+}
+
+hr {
+	border-top: 1px solid #ccc; /* 기본 색상 */
+	background-color: #ccc; /* 배경색상 */
+}
+
+.video-container {
+	position: relative;
+	width: 100%;
+}
+
+.video-container video {
+	width: 100%;
+	height: auto;
+	display: block;
+	box-shadow: 5px 5px 10px darkblue;
+}
+
+.overlay-text {
+	position: absolute;
+	top: 80%;
+	left: 20%;
+	transform: translate(-50%, -50%);
+	color: white;
+	font-size: 24px;
+	font-weight: bold;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+	z-index: 10;
+}
+
+.program {
+	margin-top: 20px;
+	background-color: rgb(252, 252, 252);
+	width: 100%; /* 최대 너비 */
+	height: 20%; /* 높이 조절 */
+	border-radius: 5px;
+	box-shadow: 5px 5px 10px darkblue;
+	padding: 20px;
+}
+
+.day-item, .time-item {
+	font-size: large;
+	color: white;
+}
+
+.gallery-container {
+	width: 100%;
+	overflow-x: auto; /* 가로 스크롤 가능하도록 설정 */
+	white-space: nowrap; /* 갤러리 아이템들이 한 줄에 나타나도록 설정 */
+}
+
+.gallery {
+	display: flex; /* Flexbox를 사용하여 아이템들을 가로로 나열 */
+	flex-wrap: wrap; /* 아이템들이 여러 행으로 자동으로 줄 바꿈되도록 설정 */
+	margin-bottom: 10px; /* 행과 행 사이의 간격 설정 */
+}
+
+.gallery-row {
+	display: flex; /* 갤러리 아이템들을 가로로 나열하기 위해 flex 사용 */
+}
+
+.gallery-item {
+	flex: 1 1 0; /* 아이템들이 자동으로 크기를 조정하도록 설정 */
+	width: 400px; /* 최대 너비를 400px로 제한 (선택 사항) */
+	height: auto; /* 높이는 자동으로 조정됩니다. */
+	margin-right: 10px; /* 갤러리 아이템 사이의 간격 설정 */
+	margin-bottom: 10px; /* 행 내부의 각각의 아이템 간격 설정 */
+}
+
+.gallery-item img {
+	width: 100%; /* 이미지가 부모 요소에 맞춰서 가로 너비 설정 */
+	height: 100%; /* 이미지 높이는 자동으로 조정됩니다. */
+	object-fit: cover; /* 이미지가 영역을 완전히 채우도록 설정 */
+	box-shadow: 5px 5px 10px darkblue;
+}
+
+.gallery-item:hover img {
+	transform: scale(1.1); /* 호버 시 이미지를 1.1배 확대 */
+	transition: transform 0.3s ease;
+}
+
+.gallery-container::-webkit-scrollbar {
+	width: 10px; /* 스크롤 바 너비 */
+	height: 10px; /* 수직 스크롤 바 높이 */
+}
+
+.gallery-container::-webkit-scrollbar-thumb {
+	background-color: rgb(86, 174, 237); /* 스크롤 바 색상 */
+	border-radius: 5px; /* 스크롤 바 모서리 둥글게 */
+}
+
+.gallery-container::-webkit-scrollbar-track {
+	background-color: #f1f1f1; /* 스크롤 트랙 색상 */
+}
+
+/* Firefox 스크롤 바 스타일링 */
+.gallery-container {
+	scrollbar-color: rgb(86, 174, 237) #f1f1f1; /* 스크롤 바 색상 */
+	scrollbar-width: thin; /* 스크롤 바 너비 */
+}
+
+/* IE/Edge 스크롤 바 스타일링 */
+.gallery-container {
+	-ms-overflow-style: none; /* IE/Edge에서 기본 스크롤 바 숨김 */
+	scrollbar-width: thin; /* 스크롤 바 너비 */
+}
+
+.gallery-container::-ms-scrollbar-thumb {
+	background-color: rgb(86, 174, 237); /* 스크롤 바 색상 */
+	border-radius: 5px; /* 스크롤 바 모서리 둥글게 */
+}
+
+.program {
+	padding: 0;
+}
+
+.program img {
+	width: 100%; /* 이미지를 부모 요소에 맞춰서 너비 조정 */
+	height: 550px; /* 이미지 비율 유지 */
+}
+
+.image-container {
+	position: relative;
+}
+
+.overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.2),
+		rgba(0, 0, 0, 0.8));
+	color: white; /* 텍스트 색상 */
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start; /* 텍스트를 아래로 정렬 */
+	align-items: center;
+	padding: 20px; /* 내용과 이미지 사이 간격 조정 */
+	opacity: 1; /* 항상 보이기 */
+	transition: opacity 0.3s ease; /* 페이드 인/아웃 효과를 위한 transition 설정 */
+}
+
+.overlay h2 {
+	margin-bottom: 10px;
+	opacity: 1; /* 항상 보이기 */
+}
+
+.overlay span, .overlay a {
+	border-radius: 20px;
+	opacity: 0; /* 초기에는 숨김 */
+}
+
+.program:hover .overlay span, .program:hover .overlay a {
+	opacity: 1; /* 호버 시 보이기 */
+}
+
+.notice {
+	position: relative;
+	margin-top: 20px;
+	background-color: white;
+	width: 100%; /* 최대 너비 */
+	height: auto; /* 고정된 높이 값 */
+	border-radius: 5px;
+	box-shadow: 5px 5px 10px darkblue;
+	padding: 20px;
+}
+
+.notice-content {
+	white-space: pre-wrap;
+	display: none;
+	padding: 10px;
+}
+
+.notice-hr {
+	border: 1px solid black;
+}
+
+.notice button {
+	border: none; /* 기본 테두리 제거 */
+	background-color: white;
+	cursor: pointer; /* 커서 모양 변경 */
+	outline: none; /* 포커스 효과 제거 */
+}
+
+.notice button:focus {
+	outline: none; /* 포커스 효과 제거 */
+}
+</style>
+</head>
+<body>
+	<header>
+		<nav class="navform navbar navbar-expand-lg bg-body-tertiary">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="/"> <img src="/image/pngegg.png"
+					alt="logoImage" style="width: 210px" />
+				</a>
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+						fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+							d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+            </svg>
+				</button>
+				<div class="collapse navbar-collapse justify-content-center"
+					id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item mr-5">
+						    <a class="nav-link" href="/information_aquarium">이용 안내</a>
+						</li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								아쿠아리움 소개 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/introducing_fish">전시생물 소개</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/introducing_program">프로그램 소개</a></li>
+							</ul></li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								온라인 예매 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/program">예약하기</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/reserveConfirm">예약확인</a></li>
+							</ul></li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								굿즈샵 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/itemMain">구매하기</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/orderInfo">구매정보</a></li>
+							</ul></li>
+					</ul>
+				</div>
+				<div th:if="${session.loginSession == null}" class="ml-auto">
+					<a href="/login" class="login">로그인</a> 
+				</div>
+				<div th:if="${session.loginSession != null}"
+					class="ml-auto">
+					<span th:text="${session.loginSession.memberName}+'님, 환영합니다.'"></span><br>
+					<a href="/MyInfo" class="login">개인정보 수정</a><br>
+					<a href="/logout" class="login">로그아웃</a>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<div class="video-container">
+		<video autoplay muted loop>
+			<source src="/image/ocean_muv.mp4" type="video/mp4" />
+		</video>
+		<div class="overlay-text">
+			<h5>물 속으로! 더 아름다운 물 속으로!</h5>
+			<h1>내셔널 마린 아쿠아리움</h1>
+			<br /> <a href="/program" class="btn btn-secondary btn-lg"
+				style="padding: 10px">티켓 예매하기</a>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="content row justify-content-center"
+			style="background-color: rgb(86, 174, 237); margin-left: 5px;">
+			<div class="info col-md-6" style="border-right: 2px solid white">
+				<h2 style="font-weight: bold; color: white; margin-bottom: 50px">
+					운영시간</h2>
+				<div class="operation-hours">
+					<div class="row">
+						<div class="day col-6 mb-3">
+							<div class="day-item mb-3">월 - 토</div>
+							<div class="day-item">일요일/공휴일</div>
+						</div>
+						<div class="time col-6 mb-3">
+							<div class="time-item mb-3">10:00 - 20:00</div>
+							<div class="time-item">휴관</div>
+						</div>
+					</div>
+					<br />
+					<br /> <span
+						style="display: block; margin-top: 10px; font-size: large; font-weight: 500; color: white;">
+						평균 관람시간은 2시간 내외입니다. 관람시간은 개인적인 차이가 있을 수 있습니다. </span>
+				</div>
+			</div>
+			<div class="info col-md-6">
+				<h2 style="font-weight: bold; color: white; margin-bottom: 50px">
+					이용 요금</h2>
+				<div class="row">
+					<span class="col-6" style="font-size: 140%; color: white">내셔널
+						마린 아쿠아리움</span> <span class="col-6" style="font-size: 140%; color: white">10,000원</span>
+				</div>
+				<br />
+			</div>
+			<div class="col-md-12 mt-4"> <!-- col-md-12를 사용하여 버튼을 왼쪽으로 정렬하기 -->
+        		<a href="/information_aquarium" class="btn btn-primary" style="padding: 10px; width: 100%;">자세히 보기</a>
+    		</div>
+		</div>
+
+		<hr />
+		<h1 style="text-align: center; color: white; font-weight: bold">
+			환상적인 친구들과 함께 하세요</h1>
+		<br />
+		<div class="gallery-container">
+			<div class="gallery">
+				<div class="gallery-row">
+					<div class="gallery-item">
+						<a href="/introducing_fish"><img
+							src="/image/20190110001046_0.jpg" alt="fishPhoto" /></a>
+					</div>
+					<div class="gallery-item">
+						<a href="/introducing_fish"><img
+							src="/image/20221012020516907_pJc2j.jpg" alt="fishPhoto" /></a>
+					</div>
+					<div class="gallery-item">
+						<a href="/introducing_fish"><img
+							src="/image/20221012020518066_fgZ1S.jpg" alt="fishPhoto" /></a>
+					</div>
+					<div class="gallery-item">
+						<a href="/introducing_fish"><img
+							src="/image/a0005111_main.jpg" alt="fishPhoto" /></a>
+					</div>
+					<div class="gallery-item">
+						<a href="/introducing_fish"><img
+							src="/image/a3000050_main.jpg" alt="fishPhoto" /></a>
+					</div>
+				</div>
+				<div class="gallery-row">
+					<div class="gallery-item">
+						<a href="/introducing_fish"><img
+							src="/image/avbsjuoeyg63cxirxlaf.jpg" alt="fishPhoto" /></a>
+					</div>
+					<div class="gallery-item">
+						<a href="/introducing_fish"><img src="/image/original.jpg"
+							alt="fishPhoto" /></a>
+					</div>
+					<div class="gallery-item">
+						<a href="/introducing_fish"><img
+							src="/image/Sunshine aquarium.jpg" alt="fishPhoto" /></a>
+					</div>
+					<div class="gallery-item">
+						<a href="/introducing_fish"><img
+							src="/image/ts60caZ8_MmLWpC6sqGOIR0HB0j8U4wnfDoiUlBChg-rZUWjypEHPm5jXjdxWYL78YisWtdAbvAv97VMWFM8CzZmri9txWxk9oyC3HPC1WrTgjBweL_4wHtNmCd4tKzwCE_P2dNUOuPBIyI08Y-AWQ.jpg"
+							alt="fishPhoto" /></a>
+					</div>
+					<div class="gallery-item">
+						<a href="/introducing_fish"><img
+							src="/image/upjnolvcjxnrm93mukpu.jpg" alt="fishPhoto" /></a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<hr />
+
+		<div class="row justify-content-center">
+			<div class="program col-md-5 mr-md-2">
+				<div class="image-container">
+					<img src="/image/image_name_20210111171933647.png" alt="program" />
+					<div class="overlay">
+						<h2 style="font-weight: bold; font-family: inherit;">대형 수조
+							다이빙 체험</h2>
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br /> <span>수조의 높이만 무려 11m! 제주의 바다를 담은
+							초대형 수조에서 환상적인 다이빙에 도전해 보세요. <br />
+						<br /> 알록달록 크고 작은 다양한 생물들이 바로 눈앞에서 유영하는 잊지 못할 경험을 선사합니다.
+						</span><br />
+						<br />
+						<br /> <a href="/introducing_program" class="btn btn-outline-light"
+							style="border-radius: 20px">자세히 보기</a>
+					</div>
+				</div>
+			</div>
+			<div class="program col-md-5 ml-md-2">
+				<div class="image-container">
+					<img src="/image/feed.jpg" alt="program" />
+					<div class="overlay">
+						<h2 style="font-weight: bold; font-family: inherit;">먹이주기 체험</h2>
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br />
+						<br /> <span>아쿠아리스트가 직접 먹이를 주면서 귀여운 펭귄과
+							서로 교감하는 모습을 감상할 수 있어요. <br />
+						<br /> 내셔널 마린 아쿠아리움에서 펭귄의 종류, 생김새, 생태를 쉽고 재미있는 설명과 함께 알아보아요!
+						</span><br />
+						<br />
+						<br /> <a href="/introducing_program" class="btn btn-outline-light"
+							style="border-radius: 20px">자세히 보기</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<hr />
+
+		<h1 style="color: white; font-weight: bold; margin-left: 50px;">공지사항</h1>
+		<div class="notice">
+			<button onclick="fold('notice1')">
+				<h4>2024년 6월 16일자 공지사항</h4>
+			</button>
+			<hr class="notice-hr">
+			<pre class="notice-content mt-4" id="notice1"
+				style="display: none; font-size: larger; font-weight: bolder; font-family: Verdana, Geneva, Tahoma, sans-serif;">
+      안녕하세요. 도심속 바다 내셔널 마린 아쿠아리움입니다.
+      
+      먹이주기 및 생태설명회 시간을 아래와 같이 안내드리오니
+      
+      이용에 참고 부탁드립니다.
+      
+      구분            
+      
+      수달               생태설명회 14:30
+      
+      바다사자         생태설명회 11:00 / 15:00
+      
+      펭귄               라디오 생태설명회 펭귄의 깐부생활 12:00
+                           아쿠아리스트 설명회 펭귄 유치원 16:00
+      물범               먹이주기 11:30
+
+      디오션            피딩스테이션 먹이주기 12:30 / 15:30 
+      
+      *생물 상태에 따라 변동
+        </pre>
+		</div>
+
+		<div class="notice">
+			<button onclick="fold('notice2')">
+				<h4>2024년 6월 24일자 공지사항</h4>
+			</button>
+			<br>
+			<hr class="notice-hr">
+			<pre class="notice-content mt-4" id="notice2"
+				style="display: none; font-size: larger; font-weight: bolder; font-family: Verdana, Geneva, Tahoma, sans-serif;">
+      안녕하세요. 내셔널 마린 아쿠아리움입니다.
+      
+      '24년 4월 1일 (월) 부터 아쿠아키즈카페의 운영이 종료되오니
+      
+      이용에 참고 부탁드립니다.
+      
+      종료일자 : '24년 3월 31일 (일)
+      
+      ※'24년 4월 1일 (월) 부터 이용 불가
+      
+      
+      
+      앞으로도 내셔널 마린 아쿠아리움에 많은 관심 부탁드립니다.
+      
+      감사합니다.
+        </pre>
+		</div>
+
+	</div>
+	<footer class="footer">
+		<div class="footer-container text-center">
+			<div class="icon">
+				<p>
+					<a href="https://www.facebook.com/?locale=ko_KR"><svg
+							xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+							fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                <path
+								d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951" />
+              </svg> </a> | <a
+						href="https://www.instagram.com/sem/campaign/emailsignup/?campaign_id=13530338586&extra_1=s%7Cc%7C547419126431%7Ce%7Cig%7C&placement=&creative=547419126431&keyword=ig&partner_id=googlesem&extra_2=campaignid%3D13530338586%26adgroupid%3D126262418054%26matchtype%3De%26network%3Dg%26source%3Dnotmobile%26search_or_content%3Ds%26device%3Dc%26devicemodel%3D%26adposition%3D%26target%3D%26targetid%3Dkwd-116669079%26loc_physical_ms%3D9195692%26loc_interest_ms%3D%26feeditemid%3D%26param1%3D%26param2%3D&gad_source=1&gclid=CjwKCAjwps-zBhAiEiwALwsVYUBgTuB3XuK7LyzjibLzvY0s91HDUhOrJNM4Lv7Ngt3VPzOaoUzARBoCu8QQAvD_BwE">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+							fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                <path
+								d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
+              </svg>
+					</a> | <a href="https://www.youtube.com/?hl=ko&gl=KR&app=desktop">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+							fill="currentColor" class="bi bi-youtube" viewBox="0 0 16 16">
+                <path
+								d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z" />
+              </svg>
+					</a> | <a href="https://x.com/?lang=ko"> <svg
+							xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+							fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
+                <path
+								d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
+              </svg>
+					</a>
+				</p>
+			</div>
+			<p>&copy; The National Marine Aquarium. All Rights Reserved.</p>
+			<p>
+				<a href="#">개인정보처리방침</a> | <a href="#">이용약관</a>
+			</p>
+			<hr style="border-color: white" />
+			<p style="font-size: small">서울특별시 강남구 대치동 509-2 강남구의회, 강남구민회관 |
+				509-2, Daechi-dong, Gangnam-gu, Seoul</p>
+			<p style="font-size: small">사업자등록번호 211-86-49403 | 대표전화
+				010-7434-8494</p>
+		</div>
+	</footer>
+</body>
+<script>
+	function fold(noticeId) {
+		var noticeContent = document.getElementById(noticeId);
+		var toggleButton = noticeContent.previousElementSibling
+				.querySelector('.toggle-btn');
+
+		if (noticeContent.style.display === 'none') {
+			noticeContent.style.display = 'block';
+			toggleButton.textContent = '접기'; // 버튼 텍스트 변경
+		} else {
+			noticeContent.style.display = 'none';
+			toggleButton.textContent = '펼치기'; // 버튼 텍스트 변경
+		}
+	}
+	
+</script>
+</html>

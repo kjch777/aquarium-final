@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>전시생물 소개</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+	crossorigin="anonymous"></script>
+<script src="/js/registerForm.js"></script>
+<style>
+/*내비게이션*/
+.navform {
+	box-shadow: 5px 5px 10px black;
+	background-color: rgb(250, 251, 253);
+}
+
+.login {
+	margin-left: auto;
+	color: darkblue;
+	font-size: small;
+	font-weight: bold;
+}
+
+.nav-link {
+	color: darkblue;
+	font-size: large;
+	font-weight: bold;
+}
+
+/*푸터*/
+footer {
+	background-color: darkblue;
+	color: white;
+	margin-top: 30px;
+	padding: 10px 0;
+}
+.image-container {
+    position: relative; /* 상대 위치 설정 */
+}
+        
+.image-container img {
+	width: 100%; /* 이미지 너비 100% */
+	height: 300px; /* 이미지 높이 설정 (예시) */
+	display: block; /* 블록 요소로 설정하여 가로 너비에 맞춤 */
+}
+
+.image-container p {
+	position: absolute; /* 절대 위치 설정 */
+	bottom: 1px; /* 아래 여백 설정 */
+	margin-left: 110px; /* 기본 마진 제거 */
+	padding: 5px; /* 내부 여백 설정 */
+	color: #fff; /* 글자 색상 설정 */
+	font-size: 40px; /* 글자 크기 설정 */
+	font-weight: bold;
+}
+.introduce{
+    padding: 10px;
+    margin-left: 10px;
+}
+.introduce img{
+    border: 5px solid #ddd; /* 액자의 테두리 스타일과 색상 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    padding: 10px; /* 이미지와 테두리 사이의 간격 */
+}
+body{
+    background-color: rgb(21, 144, 252);
+}
+
+</style>
+</head>
+<body>
+	<header>
+		<nav class="navform navbar navbar-expand-lg bg-body-tertiary">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="/"> <img src="/image/pngegg.png"
+					alt="logoImage" style="width: 210px" />
+				</a>
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+						fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+							d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+            </svg>
+				</button>
+				<div class="collapse navbar-collapse justify-content-center"
+					id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item mr-5">
+						    <a class="nav-link" href="/information_aquarium">이용 안내</a>
+						</li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								아쿠아리움 소개 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/introducing_fish">전시생물 소개</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/introducing_program">프로그램 소개</a></li>
+							</ul></li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								온라인 예매 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/program">예약하기</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/reserveConfirm">예약확인</a></li>
+							</ul></li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								굿즈샵 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/itemMain">구매하기</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/orderInfo">구매정보</a></li>
+							</ul></li>
+					</ul>
+				</div>
+				<div th:if="${session.loginSession == null}" class="ml-auto">
+					<a href="/login" class="login">로그인</a> 
+				</div>
+				<div th:if="${session.loginSession != null}"
+					class="ml-auto">
+					<span th:text="${session.loginSession.memberName}+'님, 환영합니다.'"></span><br>
+					<a href="/MyInfo" class="login">개인정보 수정</a><br>
+					<a href="/logout" class="login">로그아웃</a>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+    <div class="image-container">
+        <img src="/image/sea-fish-underwater-coral-coral-reef-biology-reef-1920x1080-px-habitat-natural-environment-invertebrate-marine-biology-coral-reef-fish-515541.jpg">
+    	<p>전시생물 소개</p>
+    </div>
+
+	<div class="container-fluid" style="margin-top: 5px; width: 90%; padding: 20px; background-color: white; box-shadow: 5px 5px 10px darkblue; border-radius: 5px;">
+
+        <div class="row justify-content-center">
+            <div class="col-10">
+                <div class="row introduce">
+                    <div class="col-md-7">
+                        <h2 style="margin-bottom: 20px;">벨루가</h2>
+                        <p>눈처럼 새하얀 벨루가! 러시아어로 '하얗다'라는 뜻입니다. 태어날 땐 짙은 회색이지만 다 크면 하얀 색으로 바뀝니다. 벨루가가 사는 곳은 북극해를 중심으로한 얼음으로 뒤덮인 차가운 바다입니다. 또한 벨루가는 다른 고래와 달리 등지느러미가 없어 얼음 아래 부딪히지 않고 헤엄칠 수 있고, 목을 자유롭게 움직일 수 있기 때문에 모래 속에 숨어있는 좋아하는 갑각류를 사냥하는데 유리합니다.</p>
+                    </div>
+                    <div class="col-md-5">
+                        <img src="/image/img_display1.jpg" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <hr style="border: 3px solid #AED6F1; width:100%;" >
+        
+        <div class="row justify-content-center">
+            <div class="col-10"> 
+                <div class="row introduce">
+                    <div class="col-md-5">
+                        <img src="/image/img_display12.jpg" class="img-fluid">
+                    </div>
+                    <div class="col-md-6">
+                        <h2 style="margin-bottom: 20px;">샌드타이거 샤크</h2>
+                        <p>샌드타이거샤크의 이빨은 여러 겹으로 겹쳐 나있고 끊임없이 재생합니다. 대부분의 시간을 유영하고 유영할 때는 입을 벌리고 있습니다. 샌드타이거샤크는 3m가 넘게 자랄 수 있는 대형 상어이고 무겁게 생겼지만 사실은 온순한 성격을 가지고 있습니다. 뾰족한 콧등과 작은 눈, 체표의 반점도 샌드타이거샤크의 큰 특징입니다. 샌드타이거샤크는 1992년 상어 중 최초의 보호종으로 등록되었습니다. 롯데월드 아쿠아리움은 멸종위기에 처한 종의 보전을 위해 노력하고 있습니다. 샥스핀 먹지 않기 등 일상에서 작은 노력으로 우리 함께 상어를 보호해요!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr style="border: 3px solid #AED6F1; width:100%;" >
+        <div class="row justify-content-center">
+            <div class="col-10"> 
+                <div class="row introduce">
+                    <div class="col-7">
+                        <h2 style="margin-bottom: 20px;">캘리포니아 바다사자</h2>
+                        <p>똘망똘망한 눈과 뛰어난 균형감각을 자랑하는 날렵한 캘리포니아 바다사자! 캘리포니아 바다사자는 물범과 함께 발이 지느러미로 된 기각류에 속합니다. 앞지느러미와 뒷지느러미가 길어 몸을 지탱하며 걷는데 유리해, 물 속 뿐 아니라 물 위에서도 빠르고 멀리 이동할 수 있습니다. 그리고 바다사자의 얼굴에 난 뚜꺼운 수염은 사냥하는데 없어서는 안될 중요한 감각기관입니다.</p>             
+                    </div>
+                    <div class="col-5">
+                        <img src="/image/img_display2.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr style="border: 3px solid #AED6F1; width:100%;" >
+
+        <div class="row justify-content-center">
+            <div class="col-10"> 
+                <div class="row introduce">
+                    <div class="col-5">
+                        <img src="/image/img_display3.jpg">
+                    </div>
+                    <div class="col-6">
+                        <h2 style="margin-bottom: 20px;">참물범</h2>
+                        <p>온대부터 한대까지 먼 바다를 오가며 사는 참물범은 추운 환경에 적응 진화되었습니다. 귓바퀴가 퇴화된 작은 구멍의 귀와, 피부 아래 두꺼운 지방층도 있어 체온 유지에 유리합니다. 이 넉넉한 지방 덕분에 통통하고 귀여운 모습을 가지게 되었습니다. 우리나라에서는 참물범과 아주 닮은 천연기념물 331호 '점박이 물범'을 백령도에서 볼 수 있습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr style="border: 3px solid #AED6F1; width:100%;" >
+
+        <div class="row justify-content-center">
+            <div class="col-10"> 
+                <div class="row introduce">
+                    <div class="col-7">
+                        <h2 style="margin-bottom: 20px;">훔볼트 펭귄</h2>
+                        <p>훔볼트 펭귄은 따뜻한 지역인 페루해류가 흐르는 연안의 작은 섬에서 물고기를 잡아먹으며 삽니다. 가슴 위쪽에는 굵고 검은 띠가 있는 것이 특징이고, 어린 개체는 전체적으로 어두운 색이며 가슴에 띠가 없습니다. 바위틈이나 동굴에 간단한 둥지를 틀고 2개의 알을 낳으며, 깃털은 마치 잠수복을 입은 듯 물이 스며드는 것을 막아 줍니다.</p>             
+                    </div>
+                    <div class="col-5">
+                        <img src="/image/img_display4.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr style="border: 3px solid #AED6F1; width:100%;" >
+
+        <div class="row justify-content-center">
+            <div class="col-10"> 
+                <div class="row introduce">
+                    <div class="col-5">
+                        <img src="/image/img_display7.jpg">
+                    </div>
+                    <div class="col-6">
+                        <h2 style="margin-bottom: 20px;">피라냐</h2>
+                        <p>민물 육식성 물고기로, 원주민말로 "이빨이 있는 물고기"라는 뜻입니다. 피라냐의 아래턱이 매우 발달하였고, 삼각형의 예리한 이빨로 질긴 먹잇감도 순식간에 먹이를 먹는답니다. 이들은 동족 또한 포식하는데 무리 중에 병들거나 약한 개체가 있을 경우 본능적으로 공격하기도 합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr style="border: 3px solid #AED6F1; width:100%;" >
+
+        <div class="row justify-content-center">
+            <div class="col-10"> 
+                <div class="row introduce">
+                    <div class="col-7">
+                        <h2 style="margin-bottom: 20px;">매부리 바다거북</h2>
+                        <p>매부리바다거북은 따뜻한 열대바다에 서식하는 멸종위기종입니다. 생김새는 다른 바다거북과 비슷하지만 부리 끝이 휜 모양이 매를 닮았고 등껍질 가장자리가 톱니모양인 것이 특징이에요. 롯데월드 아쿠아리움에서는 종보전을 위해 성장과 번식에 관한 연구를 하고 있습니다.</p>             
+                    </div>
+                    <div class="col-5">
+                        <img src="/image/img_display11.jpg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	
+	
+	
+	
+	<footer class="footer">
+		<div class="footer-container text-center">
+			<div class="icon">
+				<p>
+					<a href="https://www.facebook.com/?locale=ko_KR"><svg
+							xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+							fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                <path
+								d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951" />
+              </svg> </a> | <a
+						href="https://www.instagram.com/sem/campaign/emailsignup/?campaign_id=13530338586&extra_1=s%7Cc%7C547419126431%7Ce%7Cig%7C&placement=&creative=547419126431&keyword=ig&partner_id=googlesem&extra_2=campaignid%3D13530338586%26adgroupid%3D126262418054%26matchtype%3De%26network%3Dg%26source%3Dnotmobile%26search_or_content%3Ds%26device%3Dc%26devicemodel%3D%26adposition%3D%26target%3D%26targetid%3Dkwd-116669079%26loc_physical_ms%3D9195692%26loc_interest_ms%3D%26feeditemid%3D%26param1%3D%26param2%3D&gad_source=1&gclid=CjwKCAjwps-zBhAiEiwALwsVYUBgTuB3XuK7LyzjibLzvY0s91HDUhOrJNM4Lv7Ngt3VPzOaoUzARBoCu8QQAvD_BwE">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+							fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                <path
+								d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334" />
+              </svg>
+					</a> | <a href="https://www.youtube.com/?hl=ko&gl=KR&app=desktop">
+						<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+							fill="currentColor" class="bi bi-youtube" viewBox="0 0 16 16">
+                <path
+								d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z" />
+              </svg>
+					</a> | <a href="https://x.com/?lang=ko"> <svg
+							xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+							fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
+                <path
+								d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
+              </svg>
+					</a>
+				</p>
+			</div>
+			<p>&copy; The National Marine Aquarium. All Rights Reserved.</p>
+			<p>
+				<a href="#">개인정보처리방침</a> | <a href="#">이용약관</a>
+			</p>
+			<hr style="border-color: white" />
+			<p style="font-size: small">서울특별시 강남구 대치동 509-2 강남구의회, 강남구민회관 |
+				509-2, Daechi-dong, Gangnam-gu, Seoul</p>
+			<p style="font-size: small">사업자등록번호 211-86-49403 | 대표전화
+				010-7434-8494</p>
+		</div>
+	</footer>
+</body>
+</html>

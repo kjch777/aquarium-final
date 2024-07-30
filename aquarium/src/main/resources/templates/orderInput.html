@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+	<link rel="stylesheet"
+		  href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+	<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+			crossorigin="anonymous"></script>
+    <style>
+        /*내비게이션*/
+.navform {
+	box-shadow: 5px 5px 10px black;
+	background-color: rgb(250, 251, 253);
+}
+
+.login {
+	margin-left: auto;
+	color: darkblue;
+	font-size: small;
+	font-weight: bold;
+}
+
+.nav-link {
+	color: darkblue;
+	font-size: large;
+	font-weight: bold;
+}
+
+        /*푸터*/
+        footer {
+            background-color: darkblue;
+            color: white;
+            margin-top: 30px;
+            padding: 10px 0;
+        }
+
+        body{
+            background-color: aliceblue;
+        }
+
+        .container{
+            margin-top: 20px;
+            background-color: white;
+            box-shadow: 5px 5px 10px lightblue;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .readonly-input {
+            background-color: rgb(234, 255, 255) !important;
+            color: black;
+        }
+
+        input[type="text"] {
+            width: calc(100%);
+            padding: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            margin-bottom: 25px;
+            margin-top: 10px;
+        }
+
+        input[type="button"] {
+            padding: 6px 36px;
+            margin-left: -1px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: inherit;
+            margin-top: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            resize: none;
+            margin-bottom: 25px;
+            margin-top: 10px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        .order-info {
+            display: flex;
+            justify-content: space-between; /* 좌우 정렬 */
+            align-items: center;
+            width: 100%; /* 화면 가로 길이 전체 사용 */
+            margin-bottom: 20px; /* form과의 간격을 위한 마진 */
+        }
+
+        .order-info h3, .order-info h5 {
+            margin: 0;
+        }
+
+        .order-info .info-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .order-info .info-group h3 {
+            margin-right: 10px; /* h3와 h5 사이의 간격 조정 */
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+        
+        .form-select {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            background-color: #f8f9fa;
+            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+        }
+        .form-select:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+    </style>
+</head>
+<body>
+<header>
+		<nav class="navform navbar navbar-expand-lg bg-body-tertiary">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="/"> <img src="/image/pngegg.png"
+					alt="logoImage" style="width: 210px" />
+				</a>
+				<button class="navbar-toggler" type="button"
+					data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+					aria-controls="navbarSupportedContent" aria-expanded="false"
+					aria-label="Toggle navigation">
+					<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+						fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+							d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+            </svg>
+				</button>
+				<div class="collapse navbar-collapse justify-content-center"
+					id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+						<li class="nav-item mr-5">
+						    <a class="nav-link" href="/information_aquarium">이용 안내</a>
+						</li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								아쿠아리움 소개 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/introducing_fish">전시생물 소개</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/introducing_program">프로그램 소개</a></li>
+							</ul></li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								온라인 예매 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/program">예약하기</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/reserveConfirm">예약확인</a></li>
+							</ul></li>
+						<li class="nav-item dropdown mr-5"><a
+							class="nav-link dropdown-toggle" href="#" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+								굿즈샵 </a>
+							<ul class="dropdown-menu">
+								<li><a class="dropdown-item" href="/itemMain">구매하기</a></li>
+								<li><hr class="dropdown-divider" /></li>
+								<li><a class="dropdown-item" href="/orderInfo">구매정보</a></li>
+							</ul></li>
+					</ul>
+				</div>
+				<div th:if="${session.loginSession == null}" class="ml-auto">
+					<a href="/login" class="login">로그인</a> 
+				</div>
+				<div th:if="${session.loginSession != null}"
+					class="ml-auto">
+					<span th:text="${session.loginSession.memberName}+'님, 환영합니다.'"></span><br>
+					<a href="/MyInfo" class="login">개인정보 수정</a><br>
+					<a href="/logout" class="login">로그아웃</a>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+<div class="container">
+    <h2>주문 정보</h2>
+    <br>
+    <hr>
+    <br>
+    <div class="order-info">
+        <div class="info-group">
+            <h3>상품 이름</h3>
+            <h5 th:text="${loadName.itemName}"></h5>
+        </div>
+        <div class="info-group">
+            <h3>주문 수량</h3>
+            <h5 th:text="${setQuantity.orderQuantity + ' 개'}"></h5>
+        </div>
+        <div class="info-group">
+            <h3>결제 금액</h3>
+            <h5 th:text="${setTotalPrice.totalPrice}" id="totalPrice"></h5>
+        </div>
+    </div>
+
+    <br>
+    <hr style="height: 2px; background-color: darkslategrey;">
+    <br>
+    <h2>배송 정보</h2>
+    <br>
+    <hr>
+    <br>
+
+    <form action="../orderInfo" method="post" th:object="${order}" id="orderForm" autocomplete="off">
+        <input type="hidden" th:value="${loadName.itemNo}" id="hiddenItemNo" name="itemNo" th:field="*{itemNo}">
+        <input type="hidden" th:value="${setQuantity.orderQuantity}" th:field="*{orderQuantity}" id="hiddenOrderQuantity" name="orderQuantity">
+        <input type="hidden" th:value="${setTotalPrice.totalPrice}" th:field="*{totalPrice}" id="hiddenTotalPrice" name="totalPrice">
+
+        <!-- <input th:field="*{memberId}"> 나중에 삭제할 것 -->
+
+        <label>수령하실 분 성함</label>
+        <input type="text" th:field="*{recName}" placeholder="이름을 입력하세요." required><br>
+        <div id="recNameError" class="error-message" style="display: none;">
+            올바르지 않은 형식의 이름입니다. 이름은 한글 또는 영어로만 2 ~ 15 글자 사이로 입력하세요.
+        </div>
+
+        <label>수령하실 분 번호</label>
+        <input type="text" th:field="*{recPhone}" placeholder="전화번호를 입력하세요." required><br>
+        <div id="recPhoneError" class="error-message" style="display: none;">
+            올바르지 않은 형식입니다. 전화번호는 숫자 3자리 - 숫자 3자리 또는 4자리 - 숫자 4자리의 형식으로 입력하세요.
+        </div>
+
+        <label>수령하실 분 주소</label>
+        <div style="display: flex; flex-wrap: wrap;">
+            <div style="flex: 1; margin-right: 10px;">
+                <input type="text" id="postcode" placeholder="우편번호" th:field="*{recPostcode}" required>
+            </div>
+
+            <div style="flex: 1; margin-right: 10px;">
+                <input type="button" onclick="Postcode()" value="우편번호 찾기">
+            </div>
+
+            <div style="flex: 1; margin-right: 10px;">
+                <input type="text" id="address" placeholder="주소" th:field="*{recAddr}" required>
+            </div>
+
+            <div style="flex: 1; margin-right: 0px;">
+                <input type="text" id="detailAddress" placeholder="상세주소" th:field="*{recDetailAddr}" required>
+            </div>
+        </div>
+
+
+        <label>요청 사항</label>
+        <textarea rows="5" cols="25" th:field="*{recRequest}" placeholder="배송 시 요청 사항을 입력하세요."></textarea><br>
+
+        <div class="mb-3">
+            <label for="paymentMethod" class="form-label">결제 방식</label>
+            <select class="form-select" id="paymentMethod" th:field="*{paymentMethod}" required>
+                <option value="">결제 방식을 선택하세요.</option>
+                <option value="creditCard">신용 카드</option>
+                <option value="bankTransfer">무통장 입금</option>
+            </select>
+        </div>
+
+        <div id="creditCardInfo" class="payment-info hidden">
+            <div class="mb-3">
+                <label for="cardType" class="form-label">카드 선택</label>
+                <select class="form-select" id="cardType" th:field="*{cardType}">
+                    <option value="">결제에 사용할 카드를 선택하세요.</option>
+                    <option value="kmCard">국민카드</option>
+                    <option value="shCard">신한카드</option>
+                    <option value="ssCard">삼성카드</option>
+                    <option value="hdCard">현대카드</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="installment" class="form-label">할부 선택</label>
+                <select class="form-select" id="installment" th:field="*{installment}">
+                    <option value="">할부 개월 수를 선택하세요.</option>
+                    <option value="rightNow">일시불</option>
+                    <option value="threeMonth">3개월(무이자)</option>
+                    <option value="sixMonth">6개월(부분 무이자)</option>
+                    <option value="nineMonth">9개월</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="bankTransferInfo" class="payment-info hidden">
+            <div class="mb-3">
+                <label for="bankType" class="form-label">은행 선택</label>
+                <select class="form-select" id="bankType" th:field="*{bankType}">
+                    <option value="">무통장 입금할 은행을 선택하세요.</option>
+                    <option value="kmBank">국민은행</option>
+                    <option value="shBank">신한은행</option>
+                    <option value="hnBank">하나은행</option>
+                    <option value="wrBank">우리은행</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="accountNumber" class="form-label">계좌 번호</label>
+                <input type="text" class="form-control readonly-input" id="accountNumber" readonly>
+            </div>
+        </div>
+
+        <br>
+        <hr style="height: 2px; background-color: darkslategrey;">
+        <br>
+
+        <div class="col d-flex justify-content-end" style="padding-right: 0;">
+            <button type="submit" class="btn btn-primary">구매하기</button>
+        </div>
+    </form>
+</div>
+<footer class="footer">
+    <div class="footer-container text-center">
+        <div class="icon">
+            <p>
+                <a href="https://www.facebook.com/?locale=ko_KR"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
+                    <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951"/>
+                </svg>
+                </a> |
+                <a href="https://www.instagram.com/sem/campaign/emailsignup/?campaign_id=13530338586&extra_1=s%7Cc%7C547419126431%7Ce%7Cig%7C&placement=&creative=547419126431&keyword=ig&partner_id=googlesem&extra_2=campaignid%3D13530338586%26adgroupid%3D126262418054%26matchtype%3De%26network%3Dg%26source%3Dnotmobile%26search_or_content%3Ds%26device%3Dc%26devicemodel%3D%26adposition%3D%26target%3D%26targetid%3Dkwd-116669079%26loc_physical_ms%3D9195692%26loc_interest_ms%3D%26feeditemid%3D%26param1%3D%26param2%3D&gad_source=1&gclid=CjwKCAjwps-zBhAiEiwALwsVYUBgTuB3XuK7LyzjibLzvY0s91HDUhOrJNM4Lv7Ngt3VPzOaoUzARBoCu8QQAvD_BwE">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
+                        <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.9 3.9 0 0 0-1.417.923A3.9 3.9 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.9 3.9 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.9 3.9 0 0 0-.923-1.417A3.9 3.9 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599s.453.546.598.92c.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.5 2.5 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.5 2.5 0 0 1-.92-.598 2.5 2.5 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233s.008-2.388.046-3.231c.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92s.546-.453.92-.598c.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92m-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217m0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334"/>
+                    </svg>
+                </a> |
+                <a href="https://www.youtube.com/?hl=ko&gl=KR&app=desktop">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-youtube" viewBox="0 0 16 16">
+                        <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/>
+                    </svg>
+                </a> |
+                <a href="https://x.com/?lang=ko">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-twitter-x" viewBox="0 0 16 16">
+                        <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z"/>
+                    </svg>
+                </a>
+            </p>
+        </div>
+        <p>&copy; The National Marine Aquarium. All Rights Reserved.</p>
+        <p>
+            <a href="#">개인정보처리방침</a> | <a href="#">이용약관</a>
+        </p>
+        <hr style="border-color:white;">
+        <p style="font-size: small;">서울특별시 강남구 대치동 509-2 강남구의회, 강남구민회관 | 509-2, Daechi-dong, Gangnam-gu, Seoul</p>
+        <p style="font-size: small;">사업자등록번호 211-86-49403 | 대표전화 010-7434-8494</p>
+    </div>
+</footer>
+
+<script>
+    function Postcode() {
+        new daum.Postcode({
+            oncomplete : function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var addr = ""; // 주소 변수
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === "R") {
+                    // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else {
+                    // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById("postcode").value = data.zonecode;
+                document.getElementById("address").value = addr;
+
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById("detailAddress").focus();
+            },
+        }).open();
+    }
+
+    $(document).ready(function() {
+        // 페이지 로드 후 실행될 코드
+        var totalPriceText = $("#totalPrice").text(); // id="totalPrice" 태그의 텍스트 가져오기
+        var totalPrice = parseInt(totalPriceText.trim().replace(/[^\d]/g, ''), 10); // 숫자 추출 후 정수로 변환
+
+        if (!isNaN(totalPrice)) {
+            // 숫자를 3자리마다 쉼표로 구분하고 " 원"을 추가하여 포맷팅
+            var formattedPrice = formatNumberWithCommas(totalPrice);
+            $("#totalPrice").text(formattedPrice); // 포맷팅된 숫자를 다시 id="totalPrice" 태그에 설정
+        }
+
+        // 숫자를 3자리마다 쉼표로 구분하는 함수
+        function formatNumberWithCommas(number) {
+            return number.toLocaleString('ko-KR') + ' 원'; // 한국어 환경에서 숫자를 3자리마다 쉼표로 구분하여 문자열로 변환 후 " 원" 추가
+        }
+
+        // 이름 입력 필드 처리
+        $('#recName').on('input blur', function(event) {
+            var recNameValue = $(this).val().trim();
+            var recNameRegex = /^[가-힣a-zA-Z]{2,15}$/;
+
+            if (event.type === 'blur' || recNameValue === '') {
+                if (recNameValue === '') {
+                    $('#recNameError').hide(); // 입력값이 없을 때 오류 메시지 숨김
+                } else if (!recNameRegex.test(recNameValue)) {
+                    $('#recNameError').show(); // 오류 메시지 표시
+                } else {
+                    $('#recNameError').hide(); // 유효한 입력값일 때 오류 메시지 숨김
+                }
+            }
+        });
+
+        // 전화번호 입력 필드 처리
+        $('#recPhone').on('input blur', function(event) {
+            var recPhoneValue = $(this).val().trim();
+            var recPhoneRegex = /^\d{3}-\d{3,4}-\d{4}$/;
+
+            if (event.type === 'blur' || recPhoneValue === '') {
+                if (recPhoneValue === '') {
+                    $('#recPhoneError').hide(); // 입력값이 없을 때 오류 메시지 숨김
+                } else if (!recPhoneRegex.test(recPhoneValue)) {
+                    $('#recPhoneError').show(); // 오류 메시지 표시
+                } else {
+                    $('#recPhoneError').hide(); // 유효한 입력값일 때 오류 메시지 숨김
+                }
+            }
+        });
+
+        // 폼 제출 시 유효성 검사
+        $('#orderForm').submit(function(event) {
+            var recNameValue = $('#recName').val().trim();
+            var recNameRegex = /^[가-힣a-zA-Z]{2,15}$/;
+            var recPhoneValue = $('#recPhone').val().trim();
+            var recPhoneRegex = /^\d{3}-\d{3,4}-\d{4}$/;
+            var isValid = true;
+
+            // 이름 유효성 검사
+            if (!recNameRegex.test(recNameValue)) {
+                $('#recNameError').show(); // 이름 오류 메시지 표시
+                isValid = false;
+            } else {
+                $('#recNameError').hide(); // 이름 오류 메시지 숨김
+            }
+
+            // 전화번호 유효성 검사
+            if (!recPhoneRegex.test(recPhoneValue)) {
+                $('#recPhoneError').show(); // 전화번호 오류 메시지 표시
+                isValid = false;
+            } else {
+                $('#recPhoneError').hide(); // 전화번호 오류 메시지 숨김
+            }
+
+            // 유효하지 않은 입력이 있을 경우 폼 제출 중단
+            if (!isValid) {
+                event.preventDefault(); // 폼 제출을 중단
+                alert('입력된 정보가 올바르지 않습니다!'); // 추가적인 alert 표시
+            }
+        });
+
+        // 초기 상태 설정
+        $('#paymentMethod').change(function() {
+            var selectedMethod = $(this).val();
+
+            if (selectedMethod === 'creditCard') {
+                $('#creditCardInfo').removeClass('hidden');
+                $('#bankTransferInfo').addClass('hidden');
+                // 신용카드 선택 시 은행 선택 필드의 required 속성 제거
+                $('#bankType').removeAttr('required');
+                // 신용카드 필드에 required 속성 추가
+                $('#cardType').attr('required', true);
+                $('#installment').attr('required', true);
+            } else if (selectedMethod === 'bankTransfer') {
+                $('#creditCardInfo').addClass('hidden');
+                $('#bankTransferInfo').removeClass('hidden');
+                // 무통장 입금 선택 시 은행 선택 필드에 required 속성 추가
+                $('#bankType').attr('required', true);
+                // 신용카드 필드의 required 속성 제거
+                $('#cardType').removeAttr('required');
+                $('#installment').removeAttr('required');
+            }
+        });
+
+        // 은행 선택 시 계좌 번호 업데이트
+        $('#bankType').change(function() {
+            var selectedBank = $(this).val();
+            var accountNumber = '';
+
+            if (selectedBank === 'kmBank') {
+                accountNumber = '279801-04-287617';
+            } else if (selectedBank === 'shBank') {
+                accountNumber = '123-456-789010';
+            } else if (selectedBank === 'hnBank') {
+                accountNumber = '109-876-543210';
+            } else if (selectedBank === 'wrBank') {
+                accountNumber = '1002-536-829041';
+            }
+            $('#accountNumber').val(accountNumber);
+        });
+    });
+</script>
+</body>
+</html>
